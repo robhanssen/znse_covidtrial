@@ -1,0 +1,27 @@
+Patient,Age,Gender,Vax#,VaxType,Zn/Se,Symptoms
+AH,12,M,1,Pfizer,Treatment,No symptoms
+AH,12,M,2,Pfizer,Treatment,No symptoms
+BC,40,M,1,Moderna,No treatment,No symptoms
+BC,40,M,2,Moderna,No treatment,Symptoms
+BC,40,M,3,Moderna,No treatment,Symptoms
+DB,49,F,1,Pfizer,No treatment,Symptoms
+DB,49,F,2,Pfizer,No treatment,Symptoms
+JDL,72,M,1,Pfizer,No treatment,No symptoms
+JDL,72,M,2,Pfizer,No treatment,Symptoms
+JDL,72,M,3,Pfizer,No treatment,Symptoms
+JH,45,F,1,Moderna,Treatment,No symptoms
+JH,45,F,2,Moderna,Treatment,No symptoms
+JH,47,M,3,Pfizer,Treatment,No symptoms
+MrsC,40,F,1,Moderna,No treatment,No symptoms
+MrsC,40,F,2,Moderna,No treatment,Symptoms
+NH,10,F,1,Pfizer,No treatment,Symptoms
+NH,10,F,2,Pfizer,Treatment,
+RH,47,M,1,Pfizer,Treatment,No symptoms
+RH,47,M,2,Pfizer,Treatment,No symptoms
+RH,47,M,3,Pfizer,Treatment,No symptoms
+SS,50,M,1,Pfizer,No treatment,Symptoms
+SS,50,M,2,Pfizer,No treatment,Symptoms
+SS,50,M,3,Pfizer,No treatment,No symptoms
+TDL,67,F,1,Pfizer,No treatment,Symptoms
+TDL,67,F,2,Pfizer,No treatment,Symptoms
+TDL,67,F,3,Pfizer,Treatment,No symptoms

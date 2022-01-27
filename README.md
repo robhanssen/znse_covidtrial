@@ -1,0 +1,1 @@
+# znse_covidtrial

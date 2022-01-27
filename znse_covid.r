@@ -23,3 +23,7 @@ trial %>%
          color = "Vaccine\nshot order")
 
 ggsave("results/initial-overview.png", width = 6, height = 6)
+
+
+janitor::tabyl(trial, zn_se, symptoms) %>%
+    janitor::chisq.test()

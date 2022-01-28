@@ -25,5 +25,14 @@ trial %>%
 ggsave("results/initial-overview.png", width = 6, height = 6)
 
 
-janitor::tabyl(trial, zn_se, symptoms) %>%
-    janitor::chisq.test()
+Xsqr <-
+    janitor::tabyl(trial, zn_se, symptoms) %>%
+    janitor::chisq.test() %>%
+    broom::tidy()
+
+N <- nrow(trial)
+
+effectsize <- sqrt(Xsqr$statistic / N)
+pwr::pwr.chisq.test(w = effectsize, N = N, df = Xsqr$parameter) %>% broom::tidy()
+
+?pwr::pwr.chisq.test

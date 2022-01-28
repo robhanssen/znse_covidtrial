@@ -15,7 +15,7 @@ JH,47,M,3,Pfizer,Treatment,No symptoms
 MrsC,40,F,1,Moderna,No treatment,No symptoms
 MrsC,40,F,2,Moderna,No treatment,Symptoms
 NH,10,F,1,Pfizer,No treatment,Symptoms
-NH,10,F,2,Pfizer,Treatment,
+NH,10,F,2,Pfizer,Treatment,No symptoms
 RH,47,M,1,Pfizer,Treatment,No symptoms
 RH,47,M,2,Pfizer,Treatment,No symptoms
 RH,47,M,3,Pfizer,Treatment,No symptoms

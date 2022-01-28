@@ -1,0 +1,112 @@
+---
+title: "Are Zn and Se-based supplements a relief for COVID-19 vaccination side-effects?"
+author: "Rob Hanssen"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE, include= FALSE, warning = FALSE}
+library(tidyverse)
+theme_set(theme_light())
+
+trial <-
+  read_csv("ZnSe COVIDvax clinical trial.csv") %>%
+  janitor::clean_names() %>%
+  mutate(across(.cols = c("zn_se", "symptoms", "vax_type", "vax_number"),
+                .fns = ~ factor(.x)
+  )
+  ) %>%
+  filter(across(.cols = everything(), .fns = ~ !is.na(.x)))
+```
+
+
+# Background
+
+Based on some medical literature and a comment from a co-worker, I've been looking at the effect of zinc and selenium on the occurrence of symptoms after COVID-19 vaccination (fever, chills, exhaustion, etc.). A cursory internet search finds that selenium deficiency can lead to muscle fatigue, a weakened immune system and mental fog.^[https://www.healthline.com/health/selenium-deficiency#symptoms] while zinc defiency is also involved in impairing the immune system.^[https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/#:~:text=Zinc%20deficiency%20is%20characterized%20by,8%2C25%2C26%5D.] Although it is not subject of this study, it is proposed that either of both zinc and selenium are involved in the production of antibodies which is initiated by the vaccine.Various studies found lowered selenium levels in patients with worse COVID-19 outcomes compared to healthy individuals. ^[Nutrients 2020, 12(7), 2098]
+
+# The "clinical trial"
+
+A treatment consisting of additional Zn/Se was administered during the three consecutive days before the vaccination and during the two days after. Occurrence or absence of symptoms was recorded. The control group (no treatment) was based on people volunteering their experiences without treatment, while the treated group used treatment from a single bottle of multi-vitamin pills. This means it's certainly not double-blind (the author was part of the treated group). 
+
+For the data analysis, the following hypotheses are made
+
+- $H_0$: there is no difference between the treated and untreated groups
+- $H_1$: the treated group shows less symptoms
+
+# Initial results
+
+Results are in the table in the appendix. All people with treatments had no symptoms. Some people without treatment had no symptoms on the first vaccination, but were affected in subsequent shots. 
+
+
+
+```{r}
+trial %>%
+  ggplot +
+  aes(x = zn_se, y = symptoms, color = vax_number) + 
+  geom_jitter(width = .2, height = .2) + 
+  labs(x = "Zn/Se treatment",
+       y = "Symptoms",
+       color = "Vaccine\nshot order")
+```
+
+
+# Discussion
+
+Given the small dataset (`r nrow(trial)` observations over `r trial %>% distinct(patient) %>% count()` patients), it was considered prudent to only look at the effect of the treatment and forego analysis of the influence of the sequence of injection. 
+
+```{r chisqr, warning = FALSE}
+Xsqr <-
+  janitor::tabyl(trial, zn_se, symptoms) %>%
+  janitor::chisq.test() %>%
+  broom::tidy()
+
+N <- nrow(trial)
+
+effectsize <- sqrt(Xsqr$statistic / N)
+power <- pwr::pwr.chisq.test(w = effectsize,
+                             N = N, 
+                             df = Xsqr$parameter) %>% 
+  broom::tidy()
+```
+```{r chisqr2, warning = FALSE}
+Xsqr
+```
+
+
+```{r  chisqr3, warning = FALSE}
+power
+```
+
+
+A $\chi^2$ analysis shows that $\chi^2$ = `r round(Xsqr$statistic, 2)`, yielding of a p value p `r scales::pvalue(Xsqr$p.value)`, which is an indication that considerable reason to disregard the *null* hypothesis $H_0$ of equality of treatment *vs* non-treatment is supported. Further analysis of the power of the test (`r scales::pvalue(power$power)` at significance level p = `r scales::pvalue(power$sig.level)`) shows that applying this treatment has a high likelihood of preventing symptoms after a COVID-19 vaccination.
+
+
+# Conclusions
+
+A combination of Zn and Se supplements administered through common supplements in the days before a COVID-19 vaccination could be beneficial in relieving some of the side-effects (*e.g.* fever, chills or exhaustion). Further trials at a much larger scale would be beneficial of proving the efficacy of this treatment, since a trial at this level can only be considered anecdotal at best.
+
+
+# Disclaimer
+
+I'm not a medical professional and this "*clinical trial*" does not adhere to any standards. I don't want to start a discussion on COVID-19, need for vaccines, microchips, or anything not related to my data. I'm not paid by *Big Selenium* nor are there other potential conflicts of interest.
+
+# Appendix
+
+```{r appendix, echo = FALSE, warning = FALSE}
+replacement_table = tibble(
+  patient = trial %>% distinct(patient) %>% pull(patient),
+  patientcode = seq_len(length(patient)) %>% paste("Patient", .)
+)
+
+trial %>% 
+  inner_join(replacement_table) %>%
+  relocate(patientcode) %>% 
+  select(-patient) %>% 
+  knitr::kable()
+```

@@ -24,15 +24,24 @@ trial %>%
 
 ggsave("results/initial-overview.png", width = 6, height = 6)
 
-
+# stats evaluation
 Xsqr <-
     janitor::tabyl(trial, zn_se, symptoms) %>%
     janitor::chisq.test() %>%
     broom::tidy()
+
+Xsqr
 
 N <- nrow(trial)
 
 effectsize <- sqrt(Xsqr$statistic / N)
 pwr::pwr.chisq.test(w = effectsize, N = N, df = Xsqr$parameter) %>% broom::tidy()
 
-?pwr::pwr.chisq.test
+
+
+replacement_table = tibble(
+            patient = trial %>% distinct(patient) %>% pull(patient),
+            patientcode = seq_len(length(patient)) %>% paste("Patient", .)
+)
+
+trial %>% inner_join(replacement_table) %>% relocate(patientcode) %>% select(-patient)
